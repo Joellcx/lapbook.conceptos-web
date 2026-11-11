@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lapbook Interactivo: Desarrollo Web</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Georgia', serif;
+        }
+        body {
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        h1 {
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .contenedor-libro {
+            position: relative;
+            width: 800px;
+            max-width: 100%;
+            height: 500px;
+            perspective: 1500px;
+        }
+        .portada {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #8b0000;
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.6s ease-in-out, opacity 0.4s ease;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            overflow: hidden;
+            z-index: 10;
+        }
+        .portada-imagen {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url('https://www.itconsultors.com/images/blog/web-dev.jpg') center/cover no-repeat;
+    opacity: 0.4;
+}
+        .portada-texto {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            color: #fff;
+            padding: 30px;
+        }
+        .portada-texto h2 {
+            font-size: 32px;
+            margin-bottom: 15px;
+            color: #ffd700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+        }
+        .portada-texto p {
+            font-size: 18px;
+            color: #fff;
+        }
+        .contenido-interior {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: #f8f4e9;
+            border-radius: 12px;
+            padding: 30px;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            overflow-y: auto;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+        }
+        .contenedor-libro.abierto .portada {
+            transform: scale(0.9);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .contenedor-libro.abierto .contenido-interior {
+            opacity: 1;
+        }
+        .botones-temas {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+        .btn-tema {
+            padding: 12px 20px;
+            background: #2c3e50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 15px;
+            transition: background 0.3s;
+        }
+        .btn-tema:hover {
+            background: #3498db;
+        }
+        .area-info {
+            background: #fff;
+            border: 2px solid #d4c5a9;
+            border-radius: 10px;
+            padding: 25px;
+            min-height: 250px;
+            font-size: 15px;
+            line-height: 1.7;
+            color: #333;
+        }
+        .area-info h3 {
+            color: #8b0000;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #ffd700;
+            padding-bottom: 8px;
+        }
+        .cerrar-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #8b0000;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .instruccion {
+            margin-top: 25px;
+            color: #ffd700;
+            font-size: 16px;
+            animation: parpadeo 2s infinite;
+        }
+        @keyframes parpadeo {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        @media (max-width: 600px) {
+            .contenedor-libro { height: auto; min-height: 550px; }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>🚀 Mi Libro Interactivo: Desarrollo Web 💻</h1>
+
+    <div class="contenedor-libro" id="miLibro">
+        <!-- Portada -->
+        <div class="portada" onclick="abrirLibro()">
+            <div class="portada-imagen"></div>
+            <div class="portada-texto">
+                <h2>📖 Haz clic para abrir</h2>
+                <p>Despliega el conocimiento</p>
+            </div>
+        </div>
+
+        <!-- Interior del libro -->
+        <div class="contenido-interior">
+            <button class="cerrar-btn" onclick="cerrarLibro()">✖ Cerrar libro</button>
+            
+            <h3 style="color: #8b0000; margin-bottom: 20px; font-size: 22px;">📚 Temas</h3>
+            
+            <div class="botones-temas">
+                <button class="btn-tema" onclick="mostrarTema('html')">📄 HTML5</button>
+                <button class="btn-tema" onclick="mostrarTema('sql')">🗄️ SQL</button>
+                <button class="btn-tema" onclick="mostrarTema('jinja')">🌿 Jinja</button>
+                <button class="btn-tema" onclick="mostrarTema('css')">🎨 CSS3</button>
+                <button class="btn-tema" onclick="mostrarTema('js')">⚡ JavaScript</button>
+            </div>
+            
+            <div class="area-info" id="areaContenido">
+                <h3>✨ ¡Bienvenido!</h3>
+                <p>Has abierto tu libro interactivo sobre el desarrollo web. 🎉</p>
+                <p style="margin-top: 12px;">Selecciona cualquier tema arriba para ver su información.</p>
+                <p style="margin-top: 20px; font-style: italic; color: #888;">📖 ¡Disfruta aprendiendo!</p>
+            </div>
+        </div>
+    </div>
+
+    <p class="instruccion">👆 Haz clic en la portada para abrir el libro</p>
+
+    <script>
+        function abrirLibro() {
+            document.getElementById('miLibro').classList.add('abierto');
+        }
+        function cerrarLibro() {
+            document.getElementById('miLibro').classList.remove('abierto');
+            document.getElementById('areaContenido').innerHTML = `
+                <h3>✨ ¡Bienvenido!</h3>
+                <p>Has abierto tu libro interactivo sobre el desarrollo web. 🎉</p>
+                <p style="margin-top: 12px;">Selecciona cualquier tema arriba para ver su información.</p>
+                <p style="margin-top: 20px; font-style: italic; color: #888;">📖 ¡Disfruta aprendiendo!</p>`;
+        }
+
+        const contenidos = {
+            html: `<h3>📌 HTML5 — Estructura Web</h3>
+                <p><b>Concepto:</b> Es el lenguaje que define la estructura y el contenido de una página web mediante etiquetas.</p>
+                <p><b>Elementos principales:</b> &lt;h1&gt; (títulos), &lt;p&gt; (párrafos), &lt;img&gt; (imágenes), &lt;a&gt; (enlaces).</p>`,
+            sql: `<h3>🗄️ SQL — Bases de Datos</h3>
+                <p><b>Concepto:</b> Structured Query Language. Es el lenguaje que usamos para crear, consultar y modificar información en bases de datos.</p>
+                <p><b>Comandos principales:</b> SELECT, INSERT, UPDATE, DELETE.</p>`,
+            jinja: `<h3>🌿 Jinja — Plantillas Dinámicas</h3>
+                <p><b>Concepto:</b> Es un motor de plantillas que funciona con Flask. Permite escribir HTML que cambia según los datos que recibe del servidor.</p>
+                <p><b>Uso:</b> Mezcla código HTML con información dinámica.</p>`,
+            css: `<h3>🎨 CSS3 — Estilos y Diseño</h3>
+                <p><b>Concepto:</b> Cascading Style Sheets. Es el lenguaje que usamos para darle apariencia, colores y diseño al contenido de nuestra página web.</p>
+                <p><b>Propiedades principales:</b> color, background, font-size, border-radius.</p>`,
+            js: `<h3>⚡ JavaScript — Interactividad</h3>
+                <p><b>Concepto:</b> Es el lenguaje que hace que tu página web responda a lo que hace el usuario: clics, movimientos, escritura, entre otros.</p>
+                <p><b>Elementos:</b> Variables, Funciones, Eventos, DOM.</p>`
+        };
+
+        function mostrarTema(tipo) {
+            if (contenidos[tipo]) {
+                document.getElementById('areaContenido').innerHTML = contenidos[tipo];
+            }
+        }
+    </script>
+</body>
+</html>
